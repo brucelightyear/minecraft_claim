@@ -1,0 +1,26 @@
+{
+    "format_version": 2,
+    "header": {
+      "name": "MonScript",
+      "description": "Un script d'exemple pour Minecraft Bedrock",
+      "uuid": "d0fbbe49-1645-4891-bce3-7ff91e00d63d",
+      "version": [1, 0, 0],
+      "min_engine_version": [1, 19, 70]
+    },
+    "modules": [
+      {
+        "description": "Script principal",
+        "type": "script",
+        "uuid": "4839ec71-0564-4426-be6c-54e25b04a7fd",
+        "version": [1, 0, 0],
+        "entry": "scripts/main.js"
+      }
+    ],
+    "dependencies": [
+      {
+        "module_name": "@minecraft/server",
+        "version": "1.4.0"
+      }
+    ]
+  }
+  
