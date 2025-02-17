@@ -7,7 +7,7 @@
       "properties": {
         "claim:owner": {
           "type": "string",
-          "values": ["none"]
+          "values": ["none", "claimed"]
         }
       }
     },
@@ -54,6 +54,19 @@
         "category": "construction",
         "group": "itemGroup.name.block"
       }
-    }
+    },
+    "permutations": [
+      {
+        "condition": "query.block_property('claim:owner') == 'claimed'",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "claim_block",
+              "render_method": "opaque"
+            }
+          }
+        }
+      }
+    ]
   }
 }
