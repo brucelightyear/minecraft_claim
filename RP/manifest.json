@@ -1,0 +1,28 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "ClaimBlock RP",
+    "description": "Resource Pack pour le système de claim",
+    "uuid": "1d261584-ed2b-42da-888e-4852185b7231",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 20, 0]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "b26a4d4c-afdf-4690-88f8-931846312678",
+      "version": [1, 0, 0]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "775cceae-12a9-4702-8b27-2d4c526806d0",
+      "version": [1, 0, 0]
+    }
+  ],
+  "metadata": {
+    "authors": ["Votre Nom"],
+    "license": "MIT",
+    "url": "https://github.com/votre-repo/claimblock"
+  }
+}
