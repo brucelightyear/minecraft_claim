@@ -28,17 +28,17 @@ system.runTimeout(() => {
 //     });
 // }, 200); // Message toutes les 10 secondes
 
-world.beforeEvents.chatSend.subscribe((event) => {
-    const { message, sender } = event;
-    
+world.beforeEvents.chatSend.subscribe((eventData) => {
+    const player = eventData.sender;
+    const message = eventData.message;
     if (message.toLowerCase() === "!block") {
-        event.cancel = true; // Prevent the command from showing in chat
+        //.cancel = true; // Prevent the command from showing in chat
         try {
-            sender.runCommandAsync("give @s claim:block");
-            sender.sendMessage("§a📦 Bloc de claim donné !");
+            player.runCommandAsync("give @s claim:block");
+            //sender.sendMessage("§a📦 Bloc de claim donné !");
         } catch (error) {
             console.warn("Failed to give claim block: ", error);
-            sender.sendMessage("§c❌ Erreur lors de l'attribution du bloc de claim.");
+            //sender.sendMessage("§c❌ Erreur lors de l'attribution du bloc de claim.");
         }
     }
 });
