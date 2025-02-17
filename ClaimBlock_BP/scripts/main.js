@@ -1,9 +1,7 @@
-import { world, system, MinecraftDimensionTypes } from "@minecraft/server";
+import { world, system } from "@minecraft/server";
 
-// Store claims with persistence using world.getDynamicProperty and setDynamicProperty
+// Store claims with persistence
 const CLAIMS_PROPERTY = "claims_data";
-
-// Initialize claims from stored data
 let claims = new Map();
 
 // Load stored claims
@@ -24,10 +22,30 @@ system.runTimeout(() => {
     loadClaims();
 }, 1);
 
+// system.runInterval(() => {
+//     world.getAllPlayers().forEach(player => {
+//         player.sendMessage("Hello joueur !");
+//     });
+// }, 200); // Message toutes les 10 secondes
+
+world.beforeEvents.chatSend.subscribe((event) => {
+    const { message, sender } = event;
+    
+    if (message.toLowerCase() === "!block") {
+        event.cancel = true; // Prevent the command from showing in chat
+        try {
+            sender.runCommandAsync("give @s claim:block");
+            sender.sendMessage("§a📦 Bloc de claim donné !");
+        } catch (error) {
+            console.warn("Failed to give claim block: ", error);
+            sender.sendMessage("§c❌ Erreur lors de l'attribution du bloc de claim.");
+        }
+    }
+});
+
 world.afterEvents.blockPlace.subscribe((event) => {
     const { player, block } = event;
 
-    // Check if it's a claim block
     if (block.typeId === "claim:block") {
         const centerX = Math.floor(block.location.x);
         const centerZ = Math.floor(block.location.z);
@@ -40,26 +58,23 @@ world.afterEvents.blockPlace.subscribe((event) => {
             
             if (dx <= existingClaim.radius + 50 && dz <= existingClaim.radius + 50) {
                 player.sendMessage("§c❌ Cette zone chevauche une claim existante !");
-                // Break the placed block
                 block.dimension.getBlock(block.location).setType("minecraft:air");
                 return;
             }
         }
 
-        // Create new claim
         claims.set(`${centerX},${centerZ}`, {
             owner: owner,
             x: centerX,
             z: centerZ,
-            radius: 50 // Half-size (100x100)
+            radius: 50
         });
 
-        // Save claims after modification
         saveClaims();
-
         player.sendMessage("§a🏰 Zone claimée ! Vous êtes en mode créatif.");
+        
         try {
-            player.runCommand("gamemode creative");
+            player.runCommandAsync("gamemode creative @s");
         } catch (error) {
             console.warn("Failed to set gamemode: ", error);
         }
@@ -80,28 +95,19 @@ world.afterEvents.blockBreak.subscribe((event) => {
                 claims.delete(claimKey);
                 saveClaims();
                 player.sendMessage("§e🏚️ Claim supprimée !");
+                try {
+                    player.runCommandAsync("gamemode survival @s");
+                } catch (error) {
+                    console.warn("Failed to set gamemode: ", error);
+                }
             } else {
-                event.cancel = true;
                 player.sendMessage("§c❌ Vous ne pouvez pas détruire la claim d'un autre joueur !");
             }
         }
     }
 });
 
-world.afterEvents.chatSend.subscribe((event) => {
-    const { sender, message } = event;
-    
-    if (message === "!block") {
-        try {
-            sender.runCommand("give @s claim:block");
-            sender.sendMessage("§a📦 Bloc de claim donné !");
-        } catch (error) {
-            console.warn("Failed to give claim block: ", error);
-        }
-    }
-});
-
-// Check player positions periodically
+// Check player positions
 system.runInterval(() => {
     for (const player of world.getAllPlayers()) {
         try {
@@ -122,15 +128,15 @@ system.runInterval(() => {
 
             if (isInClaim) {
                 if (player.name === claimOwner) {
-                    player.runCommand("gamemode creative");
+                    player.runCommandAsync("gamemode creative @s");
                 } else {
-                    player.runCommand("gamemode adventure");
+                    player.runCommandAsync("gamemode adventure @s");
                 }
             } else {
-                player.runCommand("gamemode survival");
+                player.runCommandAsync("gamemode survival @s");
             }
         } catch (error) {
             console.warn("Error processing player position: ", error);
         }
     }
-}, 40); // Check every 2 seconds
+}, 40);
