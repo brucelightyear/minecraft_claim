@@ -1,0 +1,21 @@
+{
+  "format_version": "1.19.0",
+  "minecraft:block": {
+    "description": {
+      "identifier": "claim:block",
+      "is_experimental": true
+    },
+    "components": {
+      "minecraft:destroy_time": 2.0,
+      "minecraft:explosion_resistance": 10.0,
+      "minecraft:flammable": false,
+      "minecraft:creative_category": { "category": "construction" },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "claim_block",
+          "render_method": "opaque"
+        }
+      }
+    }
+  }
+}
