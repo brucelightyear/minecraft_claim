@@ -1,4 +1,4 @@
-import { world, system } from "@minecraft/server";
+import { world, BlockLocation, MinecraftBlockTypes, system } from "@minecraft/server";
 
 // Store claims with persistence
 const CLAIMS_PROPERTY = "claims_data";
@@ -18,34 +18,29 @@ function saveClaims() {
 }
 
 // Load claims when the script starts
-system.runTimeout(() => {
+system.run(() => {
     loadClaims();
-}, 1);
+});
 
-// system.runInterval(() => {
-//     world.getAllPlayers().forEach(player => {
-//         player.sendMessage("Hello joueur !");
-//     });
-// }, 200); // Message toutes les 10 secondes
-
-world.beforeEvents.chatSend.subscribe((eventData) => {
-    const player = eventData.sender;
-    const message = eventData.message;
+// Chat command handler
+world.events.chat.subscribe((eventData) => {
+    const { message, sender } = eventData;
+    
     if (message.toLowerCase() === "!block") {
-        //.cancel = true; // Prevent the command from showing in chat
         try {
-            player.runCommandAsync("give @s claim:block");
-            //sender.sendMessage("§a📦 Bloc de claim donné !");
+            sender.runCommand("give @s claim:block");
+            sender.tell("§a📦 Bloc de claim donné !");
         } catch (error) {
             console.warn("Failed to give claim block: ", error);
-            //sender.sendMessage("§c❌ Erreur lors de l'attribution du bloc de claim.");
+            sender.tell("§c❌ Erreur lors de l'attribution du bloc de claim.");
         }
     }
 });
 
-world.afterEvents.blockPlace.subscribe((event) => {
-    const { player, block } = event;
-
+// Block place handler
+world.events.playerPlaceBlock.subscribe((eventData) => {
+    const { player, block } = eventData;
+    
     if (block.typeId === "claim:block") {
         const centerX = Math.floor(block.location.x);
         const centerZ = Math.floor(block.location.z);
@@ -57,8 +52,7 @@ world.afterEvents.blockPlace.subscribe((event) => {
             const dz = Math.abs(centerZ - existingClaim.z);
             
             if (dx <= existingClaim.radius + 50 && dz <= existingClaim.radius + 50) {
-                player.sendMessage("§c❌ Cette zone chevauche une claim existante !");
-                block.dimension.getBlock(block.location).setType("minecraft:air");
+                player.tell("§c❌ Cette zone chevauche une claim existante !");
                 return;
             }
         }
@@ -71,18 +65,19 @@ world.afterEvents.blockPlace.subscribe((event) => {
         });
 
         saveClaims();
-        player.sendMessage("§a🏰 Zone claimée ! Vous êtes en mode créatif.");
+        player.tell("§a🏰 Zone claimée ! Vous êtes en mode créatif.");
         
         try {
-            player.runCommandAsync("gamemode creative @s");
+            player.runCommand("gamemode creative @s");
         } catch (error) {
             console.warn("Failed to set gamemode: ", error);
         }
     }
 });
 
-world.afterEvents.blockBreak.subscribe((event) => {
-    const { player, block } = event;
+// Block break handler
+world.events.playerBreakBlock.subscribe((eventData) => {
+    const { player, block } = eventData;
     
     if (block.typeId === "claim:block") {
         const centerX = Math.floor(block.location.x);
@@ -94,14 +89,14 @@ world.afterEvents.blockBreak.subscribe((event) => {
             if (claim.owner === player.name) {
                 claims.delete(claimKey);
                 saveClaims();
-                player.sendMessage("§e🏚️ Claim supprimée !");
+                player.tell("§e🏚️ Claim supprimée !");
                 try {
-                    player.runCommandAsync("gamemode survival @s");
+                    player.runCommand("gamemode survival @s");
                 } catch (error) {
                     console.warn("Failed to set gamemode: ", error);
                 }
             } else {
-                player.sendMessage("§c❌ Vous ne pouvez pas détruire la claim d'un autre joueur !");
+                player.tell("§c❌ Vous ne pouvez pas détruire la claim d'un autre joueur !");
             }
         }
     }
@@ -128,12 +123,12 @@ system.runInterval(() => {
 
             if (isInClaim) {
                 if (player.name === claimOwner) {
-                    player.runCommandAsync("gamemode creative @s");
+                    player.runCommand("gamemode creative @s");
                 } else {
-                    player.runCommandAsync("gamemode adventure @s");
+                    player.runCommand("gamemode adventure @s");
                 }
             } else {
-                player.runCommandAsync("gamemode survival @s");
+                player.runCommand("gamemode survival @s");
             }
         } catch (error) {
             console.warn("Error processing player position: ", error);

@@ -41,32 +41,6 @@
           }
         ]
       }
-    },
-    "events": {
-      "claim:set_claimed": {
-        "set_block_state": {
-          "claim:claimed": 1
-        }
-      },
-      "claim:set_unclaimed": {
-        "set_block_state": {
-          "claim:claimed": 0
-        }
-      }
-    },
-    "permutations": [
-      {
-        "condition": "query.block_state('claim:claimed') == 1",
-        "components": {
-          "minecraft:material_instances": {
-            "*": {
-              "texture": "claim_block",
-              "render_method": "opaque",
-              "ambient_occlusion": false
-            }
-          }
-        }
-      }
-    ]
+    }
   }
 }

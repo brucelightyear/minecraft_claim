@@ -4,14 +4,14 @@
     "description": "Resource Pack pour le système de claim",
     "name": "ClaimBlock RP",
     "uuid": "05c6d8c4-8ab0-47e8-807c-3c60b825bd31",
-    "version": [1, 0, 9],
+    "version": [1, 0, 11],
     "min_engine_version": [1, 21, 0]
   },
   "modules": [
     {
       "type": "resources",
       "uuid": "f79c11e3-94ea-416d-8558-655fa09f7470",
-      "version": [1, 0, 9]
+      "version": [1, 0, 11]
     }
   ]
 }
