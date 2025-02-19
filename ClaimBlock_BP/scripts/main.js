@@ -1,4 +1,4 @@
-import { world, system } from "@minecraft/server";
+import { world, system, GameMode } from "@minecraft/server";
 
 // Store claims with persistence
 const CLAIMS_PROPERTY = "claims_data";
@@ -13,11 +13,11 @@ function loadClaims() {
 }
 
 // Save claims to persistent storage
-function saveClaims() {
+function saveClaims(player) {
     player.sendMessage(JSON.stringify(Array.from(claims.entries())));
     world.setDynamicProperty(CLAIMS_PROPERTY, JSON.stringify(Array.from(claims.entries())));
 }
- 
+
 // Load claims when the script starts
 system.run(() => {
     loadClaims();
@@ -36,30 +36,38 @@ function displayClaims(player) {
             return;
         }
 
-        player.warn("§e📝 Liste des claims :");
+        player.sendMessage("§e📝 Liste des claims :");
         for (const [coords, claim] of claims) {
             const [x, z] = coords.split(",").map(Number);
             player.sendMessage(`§a👤 ${claim.owner} §f: [§b${x}§f, §b${z}§f] (Zone: §6${claim.radius * 2}x${claim.radius * 2}§f)`);
         }
     } catch (error) {
-        console.warn("Failed to display claims: ", error);
+        console.error("Failed to display claims: ", error);
     }
 }
 
 // Chat command handler
-// world.afterEvents.chatSend.subscribe((eventData) => {
-//     const { message, sender } = eventData;
-//     console.warn("chatSend.subscribe: ");
-//     if (message.toLowerCase() === "!block") {
-//         try {
-//             sender.runCommand("give @s claim:block");
-//             sender.tell("§a📦 Bloc de claim donné !");
-//         } catch (error) {
-//             console.warn("Failed to give claim block: ", error);
-//             sender.tell("§c❌ Erreur lors de l'attribution du bloc de claim.");
-//         }
-//     }
-// });
+world.afterEvents.chatSend.subscribe((eventData) => {
+    const { message, sender } = eventData;
+    console.info("chatSend.subscribe ");
+    if (message.toLowerCase() === "!block") {
+        try {
+            sender.runCommand("give @s claim:block");
+            sender.sendMessage("§a📦 Bloc de claim donné !");
+        } catch (error) {
+            console.error("Failed to give claim block: ", error);
+            sender.sendMessage("§c❌ Erreur lors de l'attribution du bloc de claim.");
+        }
+    }
+    if (message.toLowerCase() === "!claims") {
+        displayClaims(sender);
+    }
+    if (message.toLowerCase() === "!clear-claims") {
+        claims.clear();
+        saveClaims(sender);
+        sender.sendMessage("§e📝 Claims détruits.");
+    }    
+});
 
 // Block place handler
 world.afterEvents.playerPlaceBlock.subscribe((eventData) => {
@@ -89,27 +97,27 @@ world.afterEvents.playerPlaceBlock.subscribe((eventData) => {
                 radius: 50
             });
 
-            saveClaims();
+            saveClaims(player);
             player.sendMessage("§a🏰 Zone claimée ! Vous êtes en mode créatif.");
         } catch (error) {
-            console.warn("Failed to place claim block: ", error);
+            console.error("Failed to place claim block: ", error);
         }
         try {
             player.runCommand("gamemode creative @s");
         } catch (error) {
-            console.warn("Failed to set gamemode: ", error);
+            console.error("Failed to set gamemode: ", error);
         }
         displayClaims(player);
     }
 });
 
 // Block break handler
-world.afterEvents.playerBreakBlock.subscribe((eventData) => {
+world.beforeEvents.playerBreakBlock.subscribe((eventData) => {
     const { player, block } = eventData;
-    console.warn("playerBreakBlock"); 
+    console.info("playerBreakBlock" + block.typeId); 
     if (block.typeId === "claim:block") {
         try {
-            console.warn("playerBreakClaimBlock");
+            console.info("playerBreakClaimBlock");
             const centerX = Math.floor(block.location.x);
             const centerZ = Math.floor(block.location.z);
             const claimKey = `${centerX},${centerZ}`;
@@ -123,14 +131,14 @@ world.afterEvents.playerBreakBlock.subscribe((eventData) => {
                     try {
                         player.runCommand("gamemode survival @s");
                     } catch (error) {
-                        console.warn("Failed to set gamemode: ", error);
+                        console.error("Failed to set gamemode: ", error);
                     }
                 } else {
                     player.sendMessage("§c❌ Vous ne pouvez pas détruire la claim d'un autre joueur !");
                 }
             }
         } catch (error) {
-            console.warn("Failed to break claim block: ", error);
+            console.error("Failed to break claim block: ", error);
         }
         displayClaims(player);
     }
@@ -154,18 +162,27 @@ system.runInterval(() => {
                     break;
                 }
             }
-
+            let playerGameMode = player.getGameMode();
             if (isInClaim) {
                 if (player.name === claimOwner) {
-                    player.runCommand("gamemode survival @s");
+                    if (playerGameMode !== "creative") {
+                        player.sendMessage("§a🏰 Vous êtes dans votre claim. Mode créatif activé.");
+                        player.runCommand("gamemode creative @s");
+                    }
                 } else {
-                    player.runCommand("gamemode adventure @s");
+                    if (playerGameMode !== "adventure") {
+                        player.sendMessage("§a🏰 Vous n'êtes pas dans votre claim. Mode aventure activé.");
+                        player.runCommand("gamemode adventure @s");
+                    }
                 }
             } else {
-                player.runCommand("gamemode adventure @s");
+                if (playerGameMode !== "survival") {
+                    player.sendMessage("§a🏰 Vous sortez d'un claim. Mode survie activé.");
+                    player.runCommand("gamemode survival @s");
+                }
             }
         } catch (error) {
-            console.warn("Error processing player position: ", error);
+            console.error("Error processing player position: ", error);
         }
     }
 }, 40);
