@@ -1,5 +1,24 @@
 # Minecraft Bedrock Claims System
 
+```
+   _____ _       _                 _____           _             
+  / ____| |     (_)               / ____|         | |            
+ | |    | | __ _ _ _ __ ___  ___| (___  _   _ ___| |_ ___ _ __ ___
+ | |    | |/ _` | | '_ ` _ \/ __|\___ \| | | / __| __/ _ \ '_ ` _ \
+ | |____| | (_| | | | | | | \__ \____) | |_| \__ \ ||  __/ | | | | |
+  \_____|_|\__,_|_|_| |_| |_|___/_____/ \__, |___/\__\___|_| |_| |_|
+                                          __/ |                      
+                                         |___/                       
+```
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Minecraft: Bedrock](https://img.shields.io/badge/Minecraft-Bedrock-green.svg)](https://www.minecraft.net/)
+[![Version](https://img.shields.io/badge/version-1.0.12-blue.svg)](https://github.com/brucelightyear/minecraft_claim/releases)
+
+> A powerful territory claiming system for Minecraft Bedrock Edition that automatically manages player gamemodes based on territory ownership.
+
+---
+
 A Minecraft Bedrock Edition script that implements a territory claiming system with automatic gamemode switching. Players can claim territories and receive creative mode privileges within their claimed areas while other players are restricted to adventure mode.
 
 ## Features
