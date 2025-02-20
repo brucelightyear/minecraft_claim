@@ -25,6 +25,11 @@
 
 A Minecraft Bedrock Edition script that implements a territory claiming system with automatic gamemode switching. Players can claim territories and receive creative mode privileges within their claimed areas while other players are restricted to adventure mode.
 
+## 🌍 Available Languages
+
+- 🇬🇧 [English](README.md)
+- 🇫🇷 [Français](README.fr.md)
+
 ## Features
 
 - Territory claiming using special claim blocks
