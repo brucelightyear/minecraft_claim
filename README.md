@@ -74,16 +74,15 @@ Players will automatically switch between different gamemodes:
 
 ## Installation
 
-1. Add the script to your Minecraft Bedrock behavior pack
-2. Ensure the necessary script permissions are set in the manifest
-3. Add the custom claim block to your behavior pack
-4. Apply the behavior pack to your world
+1. Download both .mcpack files from the [latest release](https://github.com/brucelightyear/minecraft_claim/releases/tag/v1.0.12):
+   - ClaimBlock_BP.mcpack (Behavior Pack)
+   - ClaimBlock_RP.mcpack (Resource Pack)
+2. Double-click each .mcpack file to automatically install them in Minecraft
+3. Create a new world or edit an existing one and activate both packs in the world settings
 
 ## Dependencies
 
 - Minecraft Bedrock Edition
-- Custom claim block definition (claim:block)
-- @minecraft/server module
 
 ## Language
 
