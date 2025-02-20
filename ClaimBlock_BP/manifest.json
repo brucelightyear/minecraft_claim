@@ -1,30 +1,30 @@
 {
   "format_version": 2,
   "header": {
-    "description": "Behavior Pack pour le système de claim",
-    "name": "ClaimBlock BP",
+    "description": "Behavior Pack for the Claim Anchor System",
+    "name": "Claim Anchor Behavior Pack",
     "uuid": "9298223c-7f35-4081-8556-7fad0750741d",
-    "version": [1, 0, 11],
+    "version": [1, 0, 12],
     "min_engine_version": [1, 21, 0]
   },
   "modules": [
     {
       "type": "data",
       "uuid": "747b7970-d226-4381-9f56-6aa06b10bfeb",
-      "version": [1, 0, 11]
+      "version": [1, 0, 12]
     },
     {
       "type": "script",
       "language": "javascript",
       "uuid": "791048f5-7c79-4419-a722-bbc82fa2d2d0",
       "entry": "scripts/main.js",
-      "version": [1, 0, 11]
+      "version": [1, 0, 12]
     }
   ],
   "dependencies": [
     {
       "uuid": "05c6d8c4-8ab0-47e8-807c-3c60b825bd31",
-      "version": [1, 0, 11]
+      "version": [1, 0, 12]
     },
     {
       "module_name": "@minecraft/server",

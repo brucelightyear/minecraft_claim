@@ -1,2 +1,4 @@
-tile.claim:block.name=Claim Block
-item.claim:block.name=Claim Block
+tile.claim:block.name=Claim Anchor
+tile.claim:block.desc=Allows you to claim a 100x100 block territory
+item.claim:block.name=Claim Anchor
+item.claim:block.desc=Allows you to claim a 100x100 block territory

@@ -1,0 +1,11 @@
+{
+  "num_mip_levels" : 4,
+  "padding" : 8,
+  "resource_pack_name" : "claim_block",
+  "texture_name" : "atlas.terrain",
+  "texture_data": {
+    "claim_block": {
+      "textures": "textures/blocks/claim_block"
+    }
+  }  
+}

@@ -1,2 +1,4 @@
-tile.claim:block.name=Bloc de Claim
-item.claim:block.name=Bloc de Claim
+tile.claim:block.name=Ancre de revendication
+tile.claim:block.desc=Permet de revendiquer un territoire de 100x100 blocs
+item.claim:block.name=Ancre de revendication
+item.claim:block.desc=Permet de revendiquer un territoire de 100x100 blocs
