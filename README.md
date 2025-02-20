@@ -1,5 +1,9 @@
 # Minecraft Bedrock Claims System
 
+<div align="center">
+  <img src="ClaimBlock_RP/pack_icon.png" alt="Claims System Logo" width="128" height="128">
+</div>
+
 ```
    _____ _       _                 _____           _             
   / ____| |     (_)               / ____|         | |            
